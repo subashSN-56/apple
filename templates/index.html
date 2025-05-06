@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apple Disease Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🍎 Apple Disease Detection</h1>
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" name="file" id="file" accept="image/*" required>
+            <button type="submit">Predict</button>
+        </form>
+
+        <div id="result" class="result">
+            <h2>Prediction Result</h2>
+            <div class="result-content">
+                <img id="predicted-image" src="" alt="Predicted Apple" class="result-image">
+                <div class="prediction-text">
+                    <h3 id="prediction"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('upload-form');
+        const predictionText = document.getElementById('prediction');
+        const resultImage = document.getElementById('predicted-image');
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                alert(data.error);
+            } else {
+                predictionText.innerHTML = `Predicted Disease: ${data.prediction}`;
+                resultImage.src = `/uploads/${data.image}`;
+                document.getElementById('result').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
