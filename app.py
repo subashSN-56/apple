@@ -59,4 +59,4 @@ def predict():
     return jsonify({"prediction": predicted_class, "image": file.filename})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
